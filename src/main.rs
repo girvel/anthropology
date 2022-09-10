@@ -9,6 +9,7 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use tui::backend::Backend;
 
 fn main() -> Result<(), io::Error> {
     enable_raw_mode()?;
@@ -16,15 +17,9 @@ fn main() -> Result<(), io::Error> {
     execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout))?;
 
-    terminal.draw(|f| {
-        let size = f.size();
-        let block = Block::default()
-            .title("Hello world!")
-            .borders(Borders::ALL);
-        f.render_widget(block, size);
-    })?;
-
-    thread::sleep(Duration::from_millis(1000));
+    if let Err(err) = run_app(&mut terminal) {
+        println!("Error during execution of the app: {:?}", err);
+    }
 
     disable_raw_mode()?;
     execute!(
@@ -34,5 +29,18 @@ fn main() -> Result<(), io::Error> {
     )?;
     terminal.show_cursor()?;
 
+    Ok(())
+}
+
+fn run_app<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
+    terminal.draw(|f| {
+        let size = f.size();
+        let block = Block::default()
+            .title("Hello world!")
+            .borders(Borders::ALL);
+        f.render_widget(block, size);
+    })?;
+
+    thread::sleep(Duration::from_millis(1000));
     Ok(())
 }
