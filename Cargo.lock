@@ -7,6 +7,7 @@ name = "anthropology"
 version = "0.1.0"
 dependencies = [
  "crossterm",
+ "galgebra",
  "tui",
 ]
 
@@ -58,6 +59,12 @@ checksum = "2ae1b35a484aa10e07fe0638d02301c5ad24de82d310ccbd2f3693da5f09bf1c"
 dependencies = [
  "winapi",
 ]
+
+[[package]]
+name = "galgebra"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b425e197c65e65ec11d5beb406805dbc9959c8c3c4f0a2dd838c9e508a51f4ca"
 
 [[package]]
 name = "libc"

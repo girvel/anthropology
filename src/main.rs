@@ -10,6 +10,7 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use tui::backend::Backend;
+use galgebra::vector::Vec2;
 
 fn main() -> Result<(), io::Error> {
     enable_raw_mode()?;
@@ -36,7 +37,7 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
     terminal.draw(|f| {
         let size = f.size();
         let block = Block::default()
-            .title("Hello world!")
+            .title(format!("Look, a vector: {}", Vec2(-1, 1)))
             .borders(Borders::ALL);
         f.render_widget(block, size);
     })?;
