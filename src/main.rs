@@ -1,5 +1,5 @@
 use std::{io, thread, time::Duration};
-use tui::{backend::CrosstermBackend, widgets::{Block, Borders}, Terminal, Frame};
+use tui::{backend::CrosstermBackend, Terminal, Frame};
 use crossterm::{
     event::{DisableMouseCapture, EnableMouseCapture},
     execute,
@@ -7,6 +7,9 @@ use crossterm::{
 };
 use tui::backend::Backend;
 use galgebra::vector::Vec2;
+use tui::style::{Color, Style};
+use tui::text::Span;
+use tui::widgets::canvas::Canvas;
 
 fn main() -> Result<(), io::Error> {
     enable_raw_mode()?;
@@ -37,9 +40,13 @@ fn run_app<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
 }
 
 fn ui<B: Backend>(f: &mut Frame<B>) {
-    let size = f.size();
-    let block = Block::default()
-        .title(format!("Look, a vector: {}", Vec2(-1, 1) + Vec2(2, 2)))
-        .borders(Borders::ALL);
-    f.render_widget(block, size);
+    let canvas = Canvas::default()
+        .paint(|ctx| {
+            ctx.print(0., 0., Span::styled(
+                format!("Look, a vector: {}", Vec2(-1, 1) + Vec2(2, 2)),
+                Style::default().fg(Color::Black).bg(Color::White)
+            ));
+        });
+
+    f.render_widget(canvas, f.size());
 }
