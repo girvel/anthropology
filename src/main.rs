@@ -1,9 +1,5 @@
 use std::{io, thread, time::Duration};
-use tui::{
-    backend::CrosstermBackend,
-    widgets::{Block, Borders},
-    Terminal
-};
+use tui::{backend::CrosstermBackend, widgets::{Block, Borders}, Terminal, Frame};
 use crossterm::{
     event::{DisableMouseCapture, EnableMouseCapture},
     execute,
@@ -34,14 +30,16 @@ fn main() -> Result<(), io::Error> {
 }
 
 fn run_app<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
-    terminal.draw(|f| {
-        let size = f.size();
-        let block = Block::default()
-            .title(format!("Look, a vector: {}", Vec2(-1, 1)))
-            .borders(Borders::ALL);
-        f.render_widget(block, size);
-    })?;
+    terminal.draw(|f| ui(f))?;
 
     thread::sleep(Duration::from_millis(1000));
     Ok(())
+}
+
+fn ui<B: Backend>(f: &mut Frame<B>) {
+    let size = f.size();
+    let block = Block::default()
+        .title(format!("Look, a vector: {}", Vec2(-1, 1) + Vec2(2, 2)))
+        .borders(Borders::ALL);
+    f.render_widget(block, size);
 }
