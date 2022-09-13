@@ -62,9 +62,9 @@ dependencies = [
 
 [[package]]
 name = "galgebra"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c90e29373621d965251bf3bd27930b8e9921962851db9971d7b6c6a10b7e4bd"
+checksum = "ee5cf46ad666bf218790df5fd2bec9ea16aca4fd5be42892f52d16b01ac70557"
 
 [[package]]
 name = "libc"

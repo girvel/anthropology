@@ -1,10 +1,12 @@
 use std::{io, thread, time::Duration};
+use std::rc::Rc;
 use tui::{backend::CrosstermBackend, Terminal, Frame};
 use crossterm::{
     event::{DisableMouseCapture, EnableMouseCapture},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use galgebra::matrix::Matrix;
 use tui::backend::Backend;
 use galgebra::vector::Vec2;
 use tui::style::{Color, Style};
@@ -33,19 +35,32 @@ fn main() -> Result<(), io::Error> {
 }
 
 fn run_app<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
-    terminal.draw(|f| ui(f))?;
+    let mut map = Matrix::new([
+        [String::from(" "), String::from(" "), String::from(" ")],
+        [String::from(" "), String::from("a"), String::from(" ")],
+        [String::from(" "), String::from(" "), String::from(" ")],
+        [String::from(" "), String::from(" "), String::from(" ")],
+        [String::from(" "), String::from(" "), String::from(" ")],
+        [String::from(" "), String::from(" "), String::from(" ")],
+    ]);
+
+    terminal.draw(|f| ui(f, map))?;
 
     thread::sleep(Duration::from_millis(1000));
     Ok(())
 }
 
-fn ui<B: Backend>(f: &mut Frame<B>) {
+fn ui<B: Backend>(f: &mut Frame<B>, map: Matrix<String>) {
     let canvas = Canvas::default()
-        .paint(|ctx| {
-            ctx.print(0., 0., Span::styled(
-                format!("Look, a vector: {}", Vec2(-1, 1) + Vec2(2, 2)),
-                Style::default().fg(Color::Black).bg(Color::White)
-            ));
+        .paint(move |ctx| {
+            for y in 0..map.size().1 {
+                for x in 0..map.size().0 {
+                    ctx.print(0., 0., Span::styled(
+                        &map[Vec2(x, y)],
+                        Style::default().fg(Color::Black).bg(Color::White)
+                    ));
+                }
+            }
         });
 
     f.render_widget(canvas, f.size());
