@@ -7,7 +7,7 @@ use crossterm::{
 use galgebra::matrix::Matrix;
 use tui::backend::Backend;
 use galgebra::vector::Vec2;
-use tui::style::{Style};
+use tui::style::{Color, Style};
 use tui::text::Span;
 use tui::widgets::{Block, Borders};
 use tui::widgets::canvas::Canvas;
@@ -48,10 +48,15 @@ fn ui<B: Backend>(f: &mut Frame<B>, map: &Matrix<String>) {
         .paint(move |ctx| {
             for y in 0..map.size().1 {
                 for x in 0..map.size().0 {
-                    ctx.print(x as f64, -(y as f64), Span::styled(
-                        map[Vec2(x, y)].to_string(),
-                        Style::default(),
-                    ));
+                    let char = map[Vec2(x, y)].to_string();
+
+                    let style = match char.as_str() {
+                        "." => Style::default().fg(Color::LightYellow),
+                        "@" => Style::default().fg(Color::LightBlue),
+                        _ => panic!(),
+                    };
+
+                    ctx.print(x as f64, -(y as f64), Span::styled(char, style));
                 }
             }
         })
