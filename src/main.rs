@@ -7,7 +7,7 @@ use crossterm::{
 use galgebra::matrix::Matrix;
 use tui::backend::Backend;
 use galgebra::vector::Vec2;
-use tui::style::{Color, Style};
+use tui::style::{Style};
 use tui::text::Span;
 use tui::widgets::{Block, Borders};
 use tui::widgets::canvas::Canvas;
@@ -33,14 +33,8 @@ fn main() -> Result<(), io::Error> {
 }
 
 fn run_app<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
-    let map = Matrix::new([
-        [String::from(" "), String::from(" "), String::from(" ")],
-        [String::from(" "), String::from("a"), String::from(" ")],
-        [String::from(" "), String::from(" "), String::from(" ")],
-        [String::from("b"), String::from(" "), String::from(" ")],
-        [String::from(" "), String::from(" "), String::from(" ")],
-        [String::from(" "), String::from(" "), String::from(" ")],
-    ]);
+    let mut map = Matrix::filled(&String::from("."), Vec2(40, 15));
+    map[Vec2(4, 3)] = String::from("@");
 
     terminal.draw(|f| ui(f, &map))?;
 
@@ -56,7 +50,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, map: &Matrix<String>) {
                 for x in 0..map.size().0 {
                     ctx.print(x as f64, -(y as f64), Span::styled(
                         map[Vec2(x, y)].to_string(),
-                        Style::default().fg(Color::Black).bg(Color::White)
+                        Style::default(),
                     ));
                 }
             }
